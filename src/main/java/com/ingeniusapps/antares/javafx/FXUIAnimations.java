@@ -17,11 +17,36 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
+ * Proporciona utilidades de animación para nodos JavaFX.
  *
- * @author haroldop
+ * <p>Esta clase centraliza la creación de efectos visuales comunes para
+ * componentes de interfaz, incluyendo transiciones de opacidad, traslación,
+ * rotación, escala y combinaciones de estas. Los métodos retornan las
+ * transiciones configuradas para que puedan ser reutilizadas, personalizadas o
+ * controladas externamente por el consumidor.</p>
+ *
+ * <p>La mayoría de los métodos permiten indicar si la animación debe iniciar
+ * automáticamente al ser creada.</p>
  */
 public class FXUIAnimations {
 
+    /**
+     * Crea una animación de opacidad sobre un nodo.
+     *
+     * <p>La transición se configura con duración, interpolador, cantidad de ciclos
+     * y comportamiento de auto-reversa. Si {@code autostart} es {@code true},
+     * la animación se reproduce inmediatamente.</p>
+     *
+     * @param target nodo objetivo de la animación
+     * @param duration_millis duración de la animación en milisegundos
+     * @param from valor inicial de opacidad solicitado por el consumidor
+     * @param to valor final de opacidad solicitado por el consumidor
+     * @param speed_effect interpolador a utilizar
+     * @param cycle_count cantidad de ciclos
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @param autoreverse indica si la animación debe reproducirse en reversa al finalizar cada ciclo
+     * @return transición de opacidad configurada
+     */
     public FadeTransition fade(Node target, double duration_millis, double from, double to, Interpolator speed_effect, int cycle_count, boolean autostart, boolean autoreverse) {
         FadeTransition fade = new FadeTransition();
         fade.setNode(target);
@@ -39,6 +64,24 @@ public class FXUIAnimations {
         return fade;
     }
 
+    /**
+     * Crea una animación de rotación para una región JavaFX alrededor de un eje 3D.
+     *
+     * <p>Antes de crear la transición, el método agrega una transformación
+     * {@link Rotate} al nodo objetivo y define pivotes basados en el tamaño
+     * preferido de la región.</p>
+     *
+     * @param target región objetivo de la animación
+     * @param duration_millis duración de la animación en milisegundos
+     * @param axis eje de rotación
+     * @param from ángulo inicial
+     * @param to ángulo final
+     * @param speed_effect interpolador a utilizar
+     * @param cycle_count cantidad de ciclos
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @param autoreverse indica si la animación debe reproducirse en reversa al finalizar cada ciclo
+     * @return transición de rotación configurada
+     */
     public RotateTransition turning(Region target, double duration_millis, Point3D axis, double from, double to, Interpolator speed_effect, int cycle_count, boolean autostart, boolean autoreverse) {
         Rotate rotate = new Rotate();
         rotate.setAxis(axis);
@@ -61,6 +104,16 @@ public class FXUIAnimations {
         return rotateTransition;
     }
 
+    /**
+     * Crea un efecto de sacudida aleatoria en los ejes X e Y.
+     *
+     * <p>La animación genera desplazamientos aleatorios cortos durante varios
+     * cuadros y luego retorna el nodo a su posición original.</p>
+     *
+     * @param target nodo objetivo
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @return línea de tiempo configurada para el efecto de sacudida
+     */
     public Timeline shake(Node target, boolean autostart) {
         Random random = new Random();
         Timeline timeline = new Timeline();
@@ -91,6 +144,21 @@ public class FXUIAnimations {
         return timeline;
     }
 
+    /**
+     * Crea una animación de deslizamiento en los ejes X e Y.
+     *
+     * @param target nodo objetivo
+     * @param duration_millis duración de la animación en milisegundos
+     * @param from_x posición inicial en X
+     * @param to_x posición final en X
+     * @param from_y posición inicial en Y
+     * @param to_y posición final en Y
+     * @param speed_effect interpolador a utilizar
+     * @param cycle_count cantidad de ciclos
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @param autoreverse indica si la animación debe reproducirse en reversa al finalizar cada ciclo
+     * @return transición de traslación configurada
+     */
     public TranslateTransition slide(Node target, double duration_millis, double from_x, double to_x, double from_y, double to_y, Interpolator speed_effect, int cycle_count, boolean autostart, boolean autoreverse) {
         TranslateTransition translateTransition = new TranslateTransition();
         translateTransition.setNode(target);
@@ -111,6 +179,18 @@ public class FXUIAnimations {
         return translateTransition;
     }
 
+    /**
+     * Crea una animación de rotación incremental sobre un nodo.
+     *
+     * @param target nodo objetivo
+     * @param duration_millis duración de la animación en milisegundos
+     * @param angle ángulo incremental de rotación
+     * @param speed_effect interpolador a utilizar
+     * @param cycle_count cantidad de ciclos
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @param autoreverse indica si la animación debe reproducirse en reversa al finalizar cada ciclo
+     * @return transición de rotación configurada
+     */
     public RotateTransition rotate(Node target, double duration_millis, double angle, Interpolator speed_effect, int cycle_count, boolean autostart, boolean autoreverse) {
         RotateTransition rotateTransition = new RotateTransition();
         rotateTransition.setDuration(Duration.millis(duration_millis));
@@ -127,6 +207,18 @@ public class FXUIAnimations {
         return rotateTransition;
     }
 
+    /**
+     * Crea una animación de zoom uniforme en X e Y.
+     *
+     * @param target nodo objetivo
+     * @param duration_millis duración de la animación en milisegundos
+     * @param scale variación de escala a aplicar
+     * @param speed_effect interpolador a utilizar
+     * @param cycle_count cantidad de ciclos
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @param autoreverse indica si la animación debe reproducirse en reversa al finalizar cada ciclo
+     * @return transición de escala configurada
+     */
     public ScaleTransition zoom(Node target, double duration_millis, double scale, Interpolator speed_effect, int cycle_count, boolean autostart, boolean autoreverse) {
         ScaleTransition scaleTransition = new ScaleTransition();
         scaleTransition.setDuration(Duration.millis(duration_millis));
@@ -145,26 +237,22 @@ public class FXUIAnimations {
     }
 
     /**
-     * Efecto "pulse/blink" tipo Macintosh: un parpadeo rápido con ligera
-     * contracción.
+     * Crea un efecto de pulso o parpadeo con ligera contracción.
      *
-     * fxAnimations.pulse(card, 200, 0.92, 0.6, Interpolator.EASE_BOTH, 2,
-     * true);
+     * <p>El efecto combina una transición de escala y una de opacidad ejecutadas
+     * en paralelo. Al finalizar, el estado visual del nodo se restablece para
+     * evitar que quede en una condición intermedia.</p>
      *
-     * @param target Node objetivo
-     * @param durationMillis Duración total de un pulso (ms) (ida y vuelta si
-     * autoReverse=true)
-     * @param scaleFactor Factor de escala destino (ej. 0.92 encoge al 92%)
-     * @param minOpacity Opacidad mínima durante el pulso (ej. 0.6)
-     * @param interpolator Curva de animación (ej. Interpolator.EASE_BOTH)
-     * @param cycleCount Repeticiones (ej. 2). Usa Animation.INDEFINITE si lo
-     * necesitas.
-     * @param autostart Si true, hace play() automáticamente
-     * @return ParallelTransition listo para usarse
+     * @param target nodo objetivo
+     * @param durationMillis duración total del pulso en milisegundos
+     * @param scaleFactor factor de escala destino
+     * @param minOpacity opacidad mínima durante el pulso
+     * @param interpolator curva de animación
+     * @param cycleCount cantidad de repeticiones
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @return transición paralela configurada
      */
     public ParallelTransition pulse(Node target, double durationMillis, double scaleFactor, double minOpacity, Interpolator interpolator, int cycleCount, boolean autostart) {
-
-        // --- Escala (X/Y) ---
         ScaleTransition scale = new ScaleTransition(Duration.millis(durationMillis / 2.0), target);
         scale.setFromX(1.0);
         scale.setFromY(1.0);
@@ -173,18 +261,15 @@ public class FXUIAnimations {
         scale.setInterpolator(interpolator);
         scale.setAutoReverse(true);
 
-        // --- Opacidad ---
         FadeTransition fade = new FadeTransition(Duration.millis(durationMillis / 2.0), target);
         fade.setFromValue(1.0);
         fade.setToValue(minOpacity);
         fade.setInterpolator(interpolator);
         fade.setAutoReverse(true);
 
-        // Correr ambas a la vez
         ParallelTransition pulse = new ParallelTransition(target, scale, fade);
         pulse.setCycleCount(cycleCount);
 
-        // Sanitizar estado al terminar (evita que quede a medias si se interrumpe)
         pulse.setOnFinished(evt -> {
             target.setOpacity(1.0);
             target.setScaleX(1.0);
@@ -198,20 +283,17 @@ public class FXUIAnimations {
     }
 
     /**
-     * Efecto "pulse/blink" tipo Macintosh: un parpadeo rápido con ligera
-     * contracción.
+     * Crea un efecto de parpadeo rápido basado en opacidad.
      *
-     * fxAnimations.blink(card, 150, 0.4, Interpolator.LINEAR, 6, true);
+     * <p>Al finalizar, la opacidad del nodo se restablece a {@code 1.0}.</p>
      *
-     * @param target Node objetivo
-     * @param durationMillis Duración total de un pulso (ms) (ida y vuelta si
-     * autoReverse=true)
-     * @param minOpacity Opacidad mínima durante el pulso (ej. 0.6)
-     * @param interpolator Curva de animación (ej. Interpolator.EASE_BOTH)
-     * @param cycleCount Repeticiones (ej. 2). Usa Animation.INDEFINITE si lo
-     * necesitas.
-     * @param autostart Si true, hace play() automáticamente
-     * @return FadeTransition listo para usarse
+     * @param target nodo objetivo
+     * @param durationMillis duración total del efecto en milisegundos
+     * @param minOpacity opacidad mínima durante el parpadeo
+     * @param interpolator curva de animación
+     * @param cycleCount cantidad de repeticiones
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @return transición de opacidad configurada
      */
     public FadeTransition blink(Node target, double durationMillis, double minOpacity, Interpolator interpolator, int cycleCount, boolean autostart) {
         FadeTransition blink = new FadeTransition(Duration.millis(durationMillis / 2.0), target);
@@ -230,19 +312,17 @@ public class FXUIAnimations {
     }
 
     /**
-     * Efecto "bounce" rebote vertical. contracción.
+     * Crea un efecto de rebote vertical.
      *
-     * fxAnimations.bounce(card, 300, -15, Interpolator.EASE_OUT, 2, true);
+     * <p>Al finalizar, el desplazamiento vertical del nodo se restablece a cero.</p>
      *
-     * @param target Node objetivo
-     * @param durationMillis Duración total de un pulso (ms) (ida y vuelta si
-     * autoReverse=true)
-     * @param offsetY Factor de desplazamiento en Y del efecto de rebote.
-     * @param interpolator Curva de animación (ej. Interpolator.EASE_BOTH)
-     * @param cycleCount Repeticiones (ej. 2). Usa Animation.INDEFINITE si lo
-     * necesitas.
-     * @param autostart Si true, hace play() automáticamente
-     * @return TranslateTransition listo para usarse
+     * @param target nodo objetivo
+     * @param durationMillis duración total del efecto en milisegundos
+     * @param offsetY desplazamiento vertical del rebote
+     * @param interpolator curva de animación
+     * @param cycleCount cantidad de repeticiones
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @return transición de traslación vertical configurada
      */
     public TranslateTransition bounce(Node target, double durationMillis, double offsetY, Interpolator interpolator, int cycleCount, boolean autostart) {
         TranslateTransition bounce = new TranslateTransition(Duration.millis(durationMillis / 2.0), target);
@@ -261,20 +341,17 @@ public class FXUIAnimations {
     }
 
     /**
-     * Efecto "Wiggle" pequeña sacudida horizontal. contracción.
+     * Crea un efecto de sacudida horizontal corta.
      *
-     * fxAnimations.wiggle(card, 100, 8, Interpolator.EASE_IN, 4, true);
+     * <p>Al finalizar, el desplazamiento horizontal del nodo se restablece a cero.</p>
      *
-     * @param target Node objetivo
-     * @param durationMillis Duración total de un pulso (ms) (ida y vuelta si
-     * autoReverse=true)
-     * @param offsetX Factor de desplazamiento en X del efecto de sacudida a los
-     * lados.
-     * @param interpolator Curva de animación (ej. Interpolator.EASE_BOTH)
-     * @param cycleCount Repeticiones (ej. 2). Usa Animation.INDEFINITE si lo
-     * necesitas.
-     * @param autostart Si true, hace play() automáticamente
-     * @return TranslateTransition listo para usarse
+     * @param target nodo objetivo
+     * @param durationMillis duración total del efecto en milisegundos
+     * @param offsetX desplazamiento horizontal máximo
+     * @param interpolator curva de animación
+     * @param cycleCount cantidad de repeticiones
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @return transición de traslación horizontal configurada
      */
     public TranslateTransition wiggle(Node target, double durationMillis, double offsetX, Interpolator interpolator, int cycleCount, boolean autostart) {
         TranslateTransition wiggle = new TranslateTransition(Duration.millis(durationMillis / 2.0), target);
@@ -293,20 +370,20 @@ public class FXUIAnimations {
     }
 
     /**
-     * Efecto "Glow" efecto brillo aumentando opacidad + escala suave.
+     * Crea un efecto de brillo combinado con aumento suave de escala y opacidad.
      *
-     * fxAnimations.glow(card, 250, 1.1, 1.3, Interpolator.EASE_BOTH, 2, true);
+     * <p>El efecto combina una transición de escala y una transición de opacidad
+     * ejecutadas en paralelo. Al finalizar, el estado visual del nodo se
+     * restablece a sus valores base.</p>
      *
-     * @param target Node objetivo
-     * @param durationMillis Duración total de un pulso (ms) (ida y vuelta si
-     * autoReverse=true)
-     * @param scaleFactor Factor de escala destino (ej. 0.92 encoge al 92%)
-     * @param maxOpacity Opacidad máxima durante el pulso (ej. 0.6)
-     * @param interpolator Curva de animación (ej. Interpolator.EASE_BOTH)
-     * @param cycleCount Repeticiones (ej. 2). Usa Animation.INDEFINITE si lo
-     * necesitas.
-     * @param autostart Si true, hace play() automáticamente
-     * @return ParallelTransition listo para usarse
+     * @param target nodo objetivo
+     * @param durationMillis duración total del efecto en milisegundos
+     * @param scaleFactor factor de escala destino
+     * @param maxOpacity opacidad máxima a aplicar durante el efecto
+     * @param interpolator curva de animación
+     * @param cycleCount cantidad de repeticiones
+     * @param autostart indica si la animación debe iniciar automáticamente
+     * @return transición paralela configurada
      */
     public ParallelTransition glow(Node target, double durationMillis, double scaleFactor, double maxOpacity, Interpolator interpolator, int cycleCount, boolean autostart) {
         ScaleTransition scale = new ScaleTransition(Duration.millis(durationMillis / 2.0), target);

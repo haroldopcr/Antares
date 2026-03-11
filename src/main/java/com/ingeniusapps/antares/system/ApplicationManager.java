@@ -7,20 +7,75 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
+ * Administrador central de utilidades globales de aplicación para entornos JavaFX.
  *
- * @author haroldop
+ * <p>Esta clase expone instancias compartidas de componentes de infraestructura
+ * visual de Antares, así como utilidades para mostrar ventanas y finalizar la
+ * aplicación de forma controlada.</p>
+ *
+ * <p>Además, proporciona banderas de conveniencia para identificar el sistema
+ * operativo actual, lo cual facilita decisiones condicionales de comportamiento
+ * en tiempo de ejecución.</p>
+ *
+ * <p>La clase está diseñada como punto de acceso estático global y no debe
+ * ser instanciada.</p>
  */
-public class ApplicationManager {
+public final class ApplicationManager {
 
+    /**
+     * Instancia global del administrador principal de interfaz de usuario.
+     */
     public static final FXUIManager fxUIManager = new FXUIManager();
+
+    /**
+     * Instancia global del administrador de animaciones JavaFX.
+     */
     public static final FXUIAnimations fxAnimations = new FXUIAnimations();
+
+    /**
+     * Instancia global del administrador de sonido para la interfaz.
+     */
     public static final FXUISound fxSoundManager = new FXUISound();
 
+    /**
+     * Indica si la aplicación se está ejecutando sobre Linux.
+     */
     public static final boolean IS_LINUX = OSUtils.isLinux();
+
+    /**
+     * Indica si la aplicación se está ejecutando sobre Windows.
+     */
     public static final boolean IS_WINDOWS = OSUtils.isWindows();
+
+    /**
+     * Indica si la aplicación se está ejecutando sobre macOS.
+     */
     public static final boolean IS_MAC = OSUtils.isMac();
 
-    public static final boolean showStage(StageControlBlock scb) {
+    /**
+     * Evita la instanciación accidental de esta clase utilitaria global.
+     */
+    private ApplicationManager() {
+        throw new AssertionError("This class must not be instantiated.");
+    }
+
+    /**
+     * Muestra una ventana JavaFX utilizando la configuración definida en un
+     * {@link StageControlBlock}.
+     *
+     * <p>Este método aplica al {@link Stage} los parámetros incluidos en el bloque
+     * de control, tales como estilo, modalidad, propietario, dimensiones, título,
+     * icono y comportamiento visual. Finalmente, muestra la ventana usando
+     * {@code show()} o {@code showAndWait()} según la configuración indicada.</p>
+     *
+     * <p>Si el bloque es inválido o se produce un error durante la configuración
+     * o visualización de la ventana, el método retorna {@code false}.</p>
+     *
+     * @param scb bloque de configuración de la ventana a mostrar
+     * @return {@code true} si la ventana fue configurada y mostrada correctamente;
+     *         de lo contrario, {@code false}
+     */
+    public static boolean showStage(StageControlBlock scb) {
         try {
             if (scb == null || scb.stage == null || scb.fxController == null) {
                 return false;
@@ -100,6 +155,17 @@ public class ApplicationManager {
         }
     }
 
+    /**
+     * Finaliza la aplicación JavaFX de manera controlada.
+     *
+     * <p>Primero solicita el cierre normal de la plataforma JavaFX mediante
+     * {@link Platform#exit()}. Luego inicia un hilo auxiliar que fuerza la
+     * terminación del proceso tras un breve retraso, como medida de respaldo
+     * en caso de que existan recursos o hilos no finalizados correctamente.</p>
+     *
+     * <p>Si ocurre un error durante el proceso de salida controlada, se intenta
+     * finalizar la JVM inmediatamente con código de salida {@code -1}.</p>
+     */
     public static void exitApp() {
         try {
             Platform.exit();
