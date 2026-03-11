@@ -16,11 +16,8 @@ import javafx.stage.Stage;
  * <p>Además, proporciona banderas de conveniencia para identificar el sistema
  * operativo actual, lo cual facilita decisiones condicionales de comportamiento
  * en tiempo de ejecución.</p>
- *
- * <p>La clase está diseñada como punto de acceso estático global y no debe
- * ser instanciada.</p>
  */
-public final class ApplicationManager {
+public class ApplicationManager {
 
     /**
      * Instancia global del administrador principal de interfaz de usuario.
@@ -51,13 +48,6 @@ public final class ApplicationManager {
      * Indica si la aplicación se está ejecutando sobre macOS.
      */
     public static final boolean IS_MAC = OSUtils.isMac();
-
-    /**
-     * Evita la instanciación accidental de esta clase utilitaria global.
-     */
-    private ApplicationManager() {
-        throw new AssertionError("This class must not be instantiated.");
-    }
 
     /**
      * Muestra una ventana JavaFX utilizando la configuración definida en un
